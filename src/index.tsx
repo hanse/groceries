@@ -7,7 +7,7 @@ import './index.css';
 
 const history = createBrowserHistory();
 
-const getListId = (location: Location) => location.pathname.slice(1);
+const getListId = (location: Location) => location.pathname.replace(/\//g, '');
 
 history.listen(location => {
   renderApp(location);
