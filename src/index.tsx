@@ -1,39 +1,54 @@
-import React, { useRef, FormEvent } from 'react';
+import React, { useRef, FormEvent, useState } from 'react';
 import { render } from 'react-dom';
 import shortid from 'shortid';
 import { createBrowserHistory, Location } from 'history';
 import List from './List';
 import './index.css';
 
-const history = createBrowserHistory();
-
-const getListId = (location: Location) =>
-  location.pathname.replace(/\//g, '').trim();
-
-history.listen(location => {
-  renderApp(location);
-});
-
-renderApp(history.location);
-
 function App({ listId }: { listId: string }) {
   const listIdRef = useRef<HTMLInputElement>(null);
+  const [editMode, setEditMode] = useState(false);
+
   const handleNavigateToList = (e: FormEvent) => {
     e.preventDefault();
     history.push(`/${listIdRef.current!.value}`);
   };
 
   return (
-    <>
-      <form onSubmit={handleNavigateToList} id="url-bar">
-        <label htmlFor="list-id">Use List</label>
-        <input id="list-id" ref={listIdRef} type="text" defaultValue={listId} />
-      </form>
+    <div className="App">
+      <header>
+        <h1>Groceries</h1>
+        <button
+          onClick={() => setEditMode(editMode => !editMode)}
+          style={{
+            background: 'white',
+            textDecoration: 'underline',
+            color: '#282828'
+          }}
+        >
+          {editMode ? 'Done' : 'Edit'}
+        </button>
+      </header>
 
-      <List listId={listId} />
-    </>
+      {editMode && (
+        <form onSubmit={handleNavigateToList} id="url-bar">
+          <label htmlFor="list-id">Use List</label>
+          <input
+            id="list-id"
+            ref={listIdRef}
+            type="text"
+            defaultValue={listId}
+          />
+        </form>
+      )}
+
+      <List listId={listId} showDeleteButtons={editMode} />
+    </div>
   );
 }
+
+const getListId = (location: Location) =>
+  location.pathname.replace(/\//g, '').trim();
 
 function renderApp(location: Location, el = document.getElementById('root')) {
   const listId = getListId(location);
@@ -52,3 +67,11 @@ function renderApp(location: Location, el = document.getElementById('root')) {
   window.localStorage.setItem('listId', listId);
   render(<App listId={listId} />, el);
 }
+
+const history = createBrowserHistory();
+
+history.listen(location => {
+  renderApp(location);
+});
+
+renderApp(history.location);

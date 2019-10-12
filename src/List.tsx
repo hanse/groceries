@@ -2,7 +2,12 @@ import React, { FormEvent, useRef } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from './firebase';
 
-function List({ listId }: { listId: string }) {
+type Props = {
+  listId: string;
+  showDeleteButtons: boolean;
+};
+
+function List({ listId, showDeleteButtons }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, loading, error] = useCollection(
     db.collection(`lists/${listId}/items`).orderBy('order'),
@@ -52,46 +57,44 @@ function List({ listId }: { listId: string }) {
   }
 
   return (
-    <div>
-      <header>
-        <h1>Groceries</h1>
-      </header>
+    <main>
+      <ul className="lists">
+        {value &&
+          value.docs.map(doc => {
+            const item = doc.data();
+            return (
+              <li key={doc.id}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={item.needed}
+                    onChange={handleToggleNeeded(doc.id)}
+                  />{' '}
+                  <span>{item.name}</span>
+                </label>
 
-      <main>
-        <ul className="lists">
-          {value &&
-            value.docs.map(doc => {
-              const item = doc.data();
-              return (
-                <li key={doc.id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={item.needed}
-                      onChange={handleToggleNeeded(doc.id)}
-                    />{' '}
-                    <span>{item.name}</span>
-                  </label>
-
+                {showDeleteButtons && (
                   <button
                     className="Button--delete"
                     onClick={handleDeleteItem(doc.id)}
                   >
                     Delete
                   </button>
-                </li>
-              );
-            })}
-        </ul>
+                )}
+              </li>
+            );
+          })}
+      </ul>
 
-        <form className="Form--addItem" onSubmit={handleAddItem} noValidate>
-          <input ref={inputRef} type="text" placeholder="Add a grocery..." />
-          <button type="submit" aria-label="Legg til">
-            Save
-          </button>
-        </form>
-      </main>
-    </div>
+      <form className="Form--addItem" onSubmit={handleAddItem} noValidate>
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="Milk, cheese, apples etc."
+        />
+        <button type="submit">Add</button>
+      </form>
+    </main>
   );
 }
 
