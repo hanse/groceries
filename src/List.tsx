@@ -37,6 +37,12 @@ function List({ listId }: { listId: string }) {
     input.value = '';
   };
 
+  const handleDeleteItem = (itemId: string) => async (e: any) => {
+    db.collection(`lists/${listId}/items`)
+      .doc(itemId)
+      .delete();
+  };
+
   if (loading) {
     return null;
   }
@@ -52,7 +58,7 @@ function List({ listId }: { listId: string }) {
       </header>
 
       <main>
-        <ul>
+        <ul className="lists">
           {value &&
             value.docs.map(doc => {
               const item = doc.data();
@@ -66,15 +72,22 @@ function List({ listId }: { listId: string }) {
                     />{' '}
                     <span>{item.name}</span>
                   </label>
+
+                  <button
+                    className="Button--delete"
+                    onClick={handleDeleteItem(doc.id)}
+                  >
+                    Delete
+                  </button>
                 </li>
               );
             })}
         </ul>
 
-        <form onSubmit={handleAddItem} noValidate>
-          <input ref={inputRef} type="text" placeholder="Legg til matvare" />
+        <form className="Form--addItem" onSubmit={handleAddItem} noValidate>
+          <input ref={inputRef} type="text" placeholder="Add a grocery..." />
           <button type="submit" aria-label="Legg til">
-            +
+            Save
           </button>
         </form>
       </main>
