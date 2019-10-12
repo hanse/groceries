@@ -20,7 +20,7 @@ function App({ listId }: { listId: string }) {
   const listIdRef = useRef<HTMLInputElement>(null);
   const handleNavigateToList = (e: FormEvent) => {
     e.preventDefault();
-    history.push(listIdRef.current!.value);
+    history.push(`/${listIdRef.current!.value}`);
   };
 
   return (
@@ -41,12 +41,12 @@ function renderApp(location: Location, el = document.getElementById('root')) {
   if (listId.trim() === '') {
     const storedId = window.localStorage.getItem('listId');
     if (storedId) {
-      return history.push(storedId);
+      return history.push(`/${storedId}`);
     }
 
     const generatedId = shortid.generate();
     window.localStorage.setItem('listId', generatedId);
-    return history.push(generatedId);
+    return history.push(`/${generatedId}`);
   }
 
   window.localStorage.setItem('listId', listId);
