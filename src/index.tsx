@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, FormEvent } from 'react';
 import { render } from 'react-dom';
 import shortid from 'shortid';
 import { createBrowserHistory, Location } from 'history';
@@ -16,6 +16,25 @@ history.listen(location => {
 
 renderApp(history.location);
 
+function App({ listId }: { listId: string }) {
+  const listIdRef = useRef<HTMLInputElement>(null);
+  const handleNavigateToList = (e: FormEvent) => {
+    e.preventDefault();
+    history.push(listIdRef.current!.value);
+  };
+
+  return (
+    <>
+      <form onSubmit={handleNavigateToList} id="url-bar">
+        <label htmlFor="list-id">Use List</label>
+        <input id="list-id" ref={listIdRef} type="text" defaultValue={listId} />
+      </form>
+
+      <List listId={listId} />
+    </>
+  );
+}
+
 function renderApp(location: Location, el = document.getElementById('root')) {
   const listId = getListId(location);
 
@@ -30,5 +49,6 @@ function renderApp(location: Location, el = document.getElementById('root')) {
     return history.push(generatedId);
   }
 
-  render(<List listId={listId} />, el);
+  window.localStorage.setItem('listId', listId);
+  render(<App listId={listId} />, el);
 }
