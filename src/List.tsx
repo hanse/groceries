@@ -33,11 +33,20 @@ function List({ listId, showDeleteButtons }: Props) {
       return;
     }
 
-    db.collection(`lists/${listId}/items`).add({
-      name: input.value,
-      order: input.value.toLowerCase(),
-      needed: false
-    });
+    const normalized = input.value.toLowerCase();
+
+    const existing = await db
+      .collection(`lists/${listId}/items`)
+      .where('order', '==', normalized)
+      .get();
+
+    if (existing.size === 0) {
+      db.collection(`lists/${listId}/items`).add({
+        name: input.value,
+        order: normalized,
+        needed: false
+      });
+    }
 
     input.value = '';
   };
@@ -62,7 +71,7 @@ function List({ listId, showDeleteButtons }: Props) {
           </div>
         </div>
       )}
-      <ul className="lists" style={{ minHeight: '50vh' }}>
+      <ul className="lists" style={{ minHeight: '100px' }}>
         {value &&
           value.docs.map(doc => {
             const item = doc.data();
