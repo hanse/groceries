@@ -43,6 +43,21 @@ function App({ listId }: { listId: string }) {
       )}
 
       <List listId={listId} showDeleteButtons={editMode} />
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          paddingTop: 32
+        }}
+      >
+        <button
+          style={{ color: '#ddd', background: '#fff' }}
+          onClick={() => window.location.reload(true)}
+        >
+          Reload
+        </button>
+      </div>
     </div>
   );
 }

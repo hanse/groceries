@@ -48,17 +48,21 @@ function List({ listId, showDeleteButtons }: Props) {
       .delete();
   };
 
-  if (loading) {
-    return null;
-  }
-
   if (error) {
     throw error;
   }
 
   return (
     <main>
-      <ul className="lists">
+      {loading && (
+        <div className="Loader">
+          <div className="spinner">
+            <div className="double-bounce1"></div>
+            <div className="double-bounce2"></div>
+          </div>
+        </div>
+      )}
+      <ul className="lists" style={{ minHeight: '50vh' }}>
         {value &&
           value.docs.map(doc => {
             const item = doc.data();
