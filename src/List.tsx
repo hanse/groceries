@@ -1,6 +1,7 @@
 import React, { FormEvent, useRef } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from './firebase';
+import Checkbox from './Checkbox';
 
 type Props = {
   listId: string;
@@ -77,14 +78,12 @@ function List({ listId, showDeleteButtons }: Props) {
             const item = doc.data();
             return (
               <li key={doc.id}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={item.needed}
-                    onChange={handleToggleNeeded(doc.id)}
-                  />{' '}
-                  <span>{item.name}</span>
-                </label>
+                <Checkbox
+                  onChange={handleToggleNeeded(doc.id)}
+                  checked={item.needed}
+                >
+                  {item.name}
+                </Checkbox>
 
                 {showDeleteButtons && (
                   <button

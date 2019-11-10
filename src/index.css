@@ -45,26 +45,34 @@ ul.lists li label {
   padding: 12px;
 }
 
-input[type='checkbox'] {
-  margin-right: 12px;
-}
-
-input[type='checkbox']:checked ~ span {
-  text-decoration: line-through;
-  color: #999;
-}
-
-input[type='checkbox']:not(:checked) ~ span {
-  font-weight: 700;
-}
-
-input[type='text'] {
+input[type='texts'] {
   font-size: 18px;
   padding: 12px;
   flex: 1;
   border: 1px solid #ddd;
   border-radius: 0;
   box-shadow: none;
+}
+
+input[type='text'] {
+  padding: 12px;
+  border: 1px solid #a6a6a6;
+  border-radius: 3px;
+  font-size: inherit;
+  flex: 1;
+}
+
+input[type='text']:disabled {
+  background: #f1f1f1;
+  border-color: #999;
+  color: #777;
+  cursor: not-allowed;
+}
+
+input[type='text']:focus {
+  box-shadow: 0 0 0 2px #3d83ec;
+  border-color: transparent;
+  outline: none;
 }
 
 input#list-id {
@@ -80,13 +88,20 @@ input#list-id {
 
 button {
   border: 0;
-  background: #282828;
+  background: #444;
   color: #fff;
   font-weight: 700;
   cursor: pointer;
   display: block;
   font-size: 18px;
   padding: 8px 16px;
+  border-radius: 2px;
+}
+
+button:focus {
+  box-shadow: 0 0 0 2px #3d83ec;
+  border-color: transparent;
+  outline: none;
 }
 
 form {
