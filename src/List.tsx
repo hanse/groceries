@@ -63,6 +63,16 @@ function List({ listId, editMode }: Props) {
     throw error;
   }
 
+  const docs = value
+    ? value.docs.filter(doc => {
+        if (editMode) {
+          return true;
+        }
+
+        return !doc.data().needed;
+      })
+    : [];
+
   return (
     <main>
       {loading && (
@@ -76,39 +86,43 @@ function List({ listId, editMode }: Props) {
             ))}
         </ul>
       )}
-      <ul className="lists" style={{ minHeight: '100px' }}>
-        {value &&
-          value.docs
-            .filter(doc => {
-              if (editMode) {
-                return true;
-              }
+      {docs.length === 0 ? (
+        <div
+          style={{
+            padding: 20,
+            textAlign: 'center',
+            color: '#666'
+          }}
+        >
+          <div style={{ fontSize: 24, marginBottom: 8 }}>You are done 👏</div>
+          <div>Nothing more to pick up today.</div>
+        </div>
+      ) : (
+        <ul className="lists" style={{ minHeight: '100px' }}>
+          {docs.map(doc => {
+            const item = doc.data();
+            return (
+              <li key={doc.id}>
+                <Checkbox
+                  onChange={handleToggleNeeded(doc.id)}
+                  checked={item.needed}
+                >
+                  {item.name}
+                </Checkbox>
 
-              return !doc.data().needed;
-            })
-            .map(doc => {
-              const item = doc.data();
-              return (
-                <li key={doc.id}>
-                  <Checkbox
-                    onChange={handleToggleNeeded(doc.id)}
-                    checked={item.needed}
+                {editMode && (
+                  <button
+                    className="Button--delete"
+                    onClick={handleDeleteItem(doc.id)}
                   >
-                    {item.name}
-                  </Checkbox>
-
-                  {editMode && (
-                    <button
-                      className="Button--delete"
-                      onClick={handleDeleteItem(doc.id)}
-                    >
-                      <RemoveIcon style={{ width: 24, height: 24 }} />
-                    </button>
-                  )}
-                </li>
-              );
-            })}
-      </ul>
+                    <RemoveIcon style={{ width: 24, height: 24 }} />
+                  </button>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       <form className="Form--addItem" onSubmit={handleAddItem} noValidate>
         <input
