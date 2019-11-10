@@ -66,12 +66,15 @@ function List({ listId, editMode }: Props) {
   return (
     <main>
       {loading && (
-        <div className="Loader">
-          <div className="spinner">
-            <div className="double-bounce1"></div>
-            <div className="double-bounce2"></div>
-          </div>
-        </div>
+        <ul className="lists skeleton" style={{ minHeight: '100px' }}>
+          {Array(10)
+            .fill(undefined)
+            .map((_, i) => (
+              <li key={i}>
+                <span>{i}</span>
+              </li>
+            ))}
+        </ul>
       )}
       <ul className="lists" style={{ minHeight: '100px' }}>
         {value &&

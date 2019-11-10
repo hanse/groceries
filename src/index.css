@@ -45,6 +45,14 @@ ul.lists li label {
   padding: 12px;
 }
 
+ul.lists.skeleton li span {
+  flex: 1;
+  padding: 6px;
+  margin: 6px;
+  background: #f6f6f6;
+  color: transparent;
+}
+
 input[type='texts'] {
   font-size: 18px;
   padding: 12px;
