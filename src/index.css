@@ -115,9 +115,13 @@ form {
 }
 
 .Button--delete {
-  background: #eee;
+  background: #f9f9f9;
   color: #b33939;
   align-self: center;
+}
+
+.Button--delete path {
+  fill: #b33939;
 }
 
 .Loader {

@@ -26,7 +26,7 @@ function App({ listId }: { listId: string }) {
             color: '#282828'
           }}
         >
-          {editMode ? 'Done' : 'Edit'}
+          {editMode ? 'Done' : 'View All'}
         </button>
       </header>
 
@@ -42,7 +42,7 @@ function App({ listId }: { listId: string }) {
         </form>
       )}
 
-      <List listId={listId} showDeleteButtons={editMode} />
+      <List listId={listId} editMode={editMode} />
 
       <div
         style={{

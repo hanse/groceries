@@ -2,13 +2,14 @@ import React, { FormEvent, useRef } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from './firebase';
 import Checkbox from './Checkbox';
+import { ReactComponent as RemoveIcon } from './remove.svg';
 
 type Props = {
   listId: string;
-  showDeleteButtons: boolean;
+  editMode: boolean;
 };
 
-function List({ listId, showDeleteButtons }: Props) {
+function List({ listId, editMode }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, loading, error] = useCollection(
     db.collection(`lists/${listId}/items`).orderBy('order'),
@@ -74,28 +75,36 @@ function List({ listId, showDeleteButtons }: Props) {
       )}
       <ul className="lists" style={{ minHeight: '100px' }}>
         {value &&
-          value.docs.map(doc => {
-            const item = doc.data();
-            return (
-              <li key={doc.id}>
-                <Checkbox
-                  onChange={handleToggleNeeded(doc.id)}
-                  checked={item.needed}
-                >
-                  {item.name}
-                </Checkbox>
+          value.docs
+            .filter(doc => {
+              if (editMode) {
+                return true;
+              }
 
-                {showDeleteButtons && (
-                  <button
-                    className="Button--delete"
-                    onClick={handleDeleteItem(doc.id)}
+              return !doc.data().needed;
+            })
+            .map(doc => {
+              const item = doc.data();
+              return (
+                <li key={doc.id}>
+                  <Checkbox
+                    onChange={handleToggleNeeded(doc.id)}
+                    checked={item.needed}
                   >
-                    Delete
-                  </button>
-                )}
-              </li>
-            );
-          })}
+                    {item.name}
+                  </Checkbox>
+
+                  {editMode && (
+                    <button
+                      className="Button--delete"
+                      onClick={handleDeleteItem(doc.id)}
+                    >
+                      <RemoveIcon style={{ width: 24, height: 24 }} />
+                    </button>
+                  )}
+                </li>
+              );
+            })}
       </ul>
 
       <form className="Form--addItem" onSubmit={handleAddItem} noValidate>
@@ -103,6 +112,7 @@ function List({ listId, showDeleteButtons }: Props) {
           ref={inputRef}
           type="text"
           placeholder="Milk, cheese, apples etc."
+          style={{ marginRight: 4 }}
         />
         <button type="submit">Add</button>
       </form>
