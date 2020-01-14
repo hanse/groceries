@@ -86,7 +86,7 @@ function List({ listId, editMode }: Props) {
             ))}
         </ul>
       )}
-      {docs.length === 0 ? (
+      {!loading && docs.length === 0 ? (
         <div
           style={{
             padding: 20,
@@ -94,11 +94,16 @@ function List({ listId, editMode }: Props) {
             color: '#666'
           }}
         >
-          <div style={{ fontSize: 24, marginBottom: 8 }}>You are done 👏</div>
+          <div style={{ fontSize: 24, marginBottom: 8 }}>
+            You are done{' '}
+            <span role="img" aria-label="clap">
+              👏
+            </span>
+          </div>
           <div>Nothing more to pick up today.</div>
         </div>
       ) : (
-        <ul className="lists" style={{ minHeight: '100px' }}>
+        <ul className="lists">
           {docs.map(doc => {
             const item = doc.data();
             return (
