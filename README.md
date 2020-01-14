@@ -7,4 +7,8 @@
   <img src="./screenshots/view-all.png" width="260">
 </div>
 
-Built on [Google Firebase]().
+---
+
+## About
+
+Built using [Google Firebase]().
