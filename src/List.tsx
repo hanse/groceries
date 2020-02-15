@@ -48,6 +48,14 @@ function List({ listId, editMode }: Props) {
         order: normalized,
         needed: false
       });
+    } else {
+      existing.forEach(doc => {
+        db.collection(`lists/${listId}/items`)
+          .doc(doc.id)
+          .update({
+            needed: false
+          });
+      });
     }
 
     input.value = '';
