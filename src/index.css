@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -16,7 +17,7 @@ body {
 }
 
 .App {
-  max-width: 900px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -33,9 +34,16 @@ header {
   justify-content: space-between;
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 16px;
+}
+
 ul.lists li {
   border-bottom: 1px solid #eee;
-  padding: 0 16px;
+  padding: 0;
   list-style: none;
   display: flex;
 }
@@ -53,6 +61,11 @@ ul.lists.skeleton li span {
   color: transparent;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+}
+
 input[type='text'] {
   appearance: none;
   padding: 12px;
@@ -60,6 +73,7 @@ input[type='text'] {
   border-radius: 3px;
   font-size: inherit;
   flex: 1;
+  width: 100%;
 }
 
 input[type='text']:disabled {
@@ -75,11 +89,7 @@ input[type='text']:focus {
   outline: none;
 }
 
-input#list-id {
-  margin-left: 12px;
-}
-
-#url-bar label {
+.Form-urlBar label {
   font-size: 12px;
   text-transform: uppercase;
   color: #888;
@@ -104,14 +114,13 @@ button:focus {
   outline: none;
 }
 
-form {
-  padding: 16px;
-  display: flex;
-  align-items: stretch;
+.Form-addItem {
+  margin-top: 32px;
+  flex-direction: row;
 }
 
-.Form--addItem {
-  margin-top: 16px;
+.Form-urlBar {
+  margin-bottom: 32px;
 }
 
 .Button--delete {
@@ -122,6 +131,12 @@ form {
 
 .Button--delete path {
   fill: #b33939;
+}
+
+.Button--text {
+  background: transparent;
+  text-decoration: underline;
+  color: #282828;
 }
 
 .Loader {

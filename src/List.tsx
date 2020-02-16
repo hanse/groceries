@@ -82,7 +82,7 @@ function List({ listId, editMode }: Props) {
     : [];
 
   return (
-    <main>
+    <>
       {loading && (
         <ul className="lists skeleton" style={{ minHeight: '100px' }}>
           {Array(10)
@@ -125,7 +125,7 @@ function List({ listId, editMode }: Props) {
 
                 {editMode && (
                   <button
-                    className="Button--delete"
+                    className="Button Button--delete"
                     onClick={handleDeleteItem(doc.id)}
                   >
                     <RemoveIcon style={{ width: 24, height: 24 }} />
@@ -137,7 +137,7 @@ function List({ listId, editMode }: Props) {
         </ul>
       )}
 
-      <form className="Form--addItem" onSubmit={handleAddItem} noValidate>
+      <form className="Form-addItem" onSubmit={handleAddItem} noValidate>
         <input
           ref={inputRef}
           type="text"
@@ -146,7 +146,7 @@ function List({ listId, editMode }: Props) {
         />
         <button type="submit">Add</button>
       </form>
-    </main>
+    </>
   );
 }
 

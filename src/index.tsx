@@ -23,13 +23,6 @@ function LogoutButton() {
 function Root({ listId }: { listId: string }) {
   const [user, loading, error] = useAuthState(auth());
 
-  const login = () => {
-    const provider = new auth.GoogleAuthProvider();
-    provider.addScope('profile');
-    provider.addScope('email');
-    auth().signInWithPopup(provider);
-  };
-
   if (loading) {
     return null;
   }
@@ -42,10 +35,29 @@ function Root({ listId }: { listId: string }) {
     );
   }
 
+  return <>{user ? <App listId={listId} /> : <UnauthenticatedApp />}</>;
+}
+
+function UnauthenticatedApp() {
+  const login = () => {
+    const provider = new auth.GoogleAuthProvider();
+    provider.addScope('profile');
+    provider.addScope('email');
+    auth().signInWithPopup(provider);
+  };
+
   return (
-    <>
-      {user ? <App listId={listId} /> : <button onClick={login}>Login</button>}
-    </>
+    <div className="App">
+      <header>
+        <h1>Groceries</h1>
+      </header>
+
+      <main>
+        <div>
+          <button onClick={login}>Login</button>
+        </div>
+      </main>
+    </div>
   );
 }
 
@@ -64,48 +76,48 @@ function App({ listId }: { listId: string }) {
         <h1>Groceries</h1>
         <button
           onClick={() => setEditMode(editMode => !editMode)}
-          style={{
-            background: 'white',
-            textDecoration: 'underline',
-            color: '#282828'
-          }}
+          className="Button Button--text"
         >
           {editMode ? 'Done' : 'View All'}
         </button>
       </header>
 
-      {editMode && (
-        <form onSubmit={handleNavigateToList} id="url-bar">
-          <label htmlFor="list-id">Use List</label>
-          <input
-            id="list-id"
-            ref={listIdRef}
-            type="text"
-            defaultValue={listId}
-          />
-        </form>
-      )}
+      <main>
+        {editMode && (
+          <form onSubmit={handleNavigateToList} className="Form-urlBar">
+            <label htmlFor="list-id">Use List</label>
+            <input
+              id="list-id"
+              ref={listIdRef}
+              type="text"
+              defaultValue={listId}
+            />
+          </form>
+        )}
 
-      <List listId={listId} editMode={editMode} />
+        <List listId={listId} editMode={editMode} />
 
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          alignItems: 'center',
-          paddingTop: 32
-        }}
-      >
-        {editMode && <LogoutButton />}
+        {editMode && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              alignItems: 'center',
+              paddingTop: 32
+            }}
+          >
+            <LogoutButton />
 
-        <button
-          style={{ color: '#ddd', background: '#fff', marginTop: 16 }}
-          onClick={() => window.location.reload(true)}
-        >
-          Reload
-        </button>
-      </div>
+            <button
+              style={{ color: '#ddd', background: '#fff', marginTop: 16 }}
+              onClick={() => window.location.reload(true)}
+            >
+              Reload
+            </button>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
