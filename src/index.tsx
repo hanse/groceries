@@ -2,8 +2,52 @@ import React, { useRef, FormEvent, useState } from 'react';
 import { render } from 'react-dom';
 import shortid from 'shortid';
 import { createBrowserHistory, Location } from 'history';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import List from './List';
 import './index.css';
+import { auth } from './firebase';
+import 'firebase/auth';
+
+function LogoutButton() {
+  const logout = () => {
+    auth().signOut();
+  };
+
+  return (
+    <button onClick={logout} style={{ backgroundColor: '#b33939' }}>
+      Logout
+    </button>
+  );
+}
+
+function Root({ listId }: { listId: string }) {
+  const [user, loading, error] = useAuthState(auth());
+
+  const login = () => {
+    const provider = new auth.GoogleAuthProvider();
+    provider.addScope('profile');
+    provider.addScope('email');
+    auth().signInWithPopup(provider);
+  };
+
+  if (loading) {
+    return null;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <p>Error: {error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {user ? <App listId={listId} /> : <button onClick={login}>Login</button>}
+    </>
+  );
+}
 
 function App({ listId }: { listId: string }) {
   const listIdRef = useRef<HTMLInputElement>(null);
@@ -48,11 +92,15 @@ function App({ listId }: { listId: string }) {
         style={{
           display: 'flex',
           justifyContent: 'center',
+          flexDirection: 'column',
+          alignItems: 'center',
           paddingTop: 32
         }}
       >
+        {editMode && <LogoutButton />}
+
         <button
-          style={{ color: '#ddd', background: '#fff' }}
+          style={{ color: '#ddd', background: '#fff', marginTop: 16 }}
           onClick={() => window.location.reload(true)}
         >
           Reload
@@ -80,7 +128,7 @@ function renderApp(location: Location, el = document.getElementById('root')) {
   }
 
   window.localStorage.setItem('listId', listId);
-  render(<App listId={listId} />, el);
+  render(<Root listId={listId} />, el);
 }
 
 const history = createBrowserHistory();
