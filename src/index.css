@@ -46,6 +46,12 @@ ul.lists li {
   padding: 0;
   list-style: none;
   display: flex;
+  background: transparent;
+  transition: background 0.5s;
+}
+
+ul.lists li.highlight {
+  background: rgb(255, 255, 183);
 }
 
 ul.lists li label {

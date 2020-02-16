@@ -10,6 +10,7 @@ type Props = {
 };
 
 function List({ listId, editMode }: Props) {
+  const listRef = useRef<HTMLUListElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, loading, error] = useCollection(
     db.collection(`lists/${listId}/items`).orderBy('order'),
@@ -55,6 +56,20 @@ function List({ listId, editMode }: Props) {
           .update({
             needed: false
           });
+
+        if (!listRef.current) {
+          return;
+        }
+
+        const item = listRef.current!.querySelector(
+          `[data-name=${doc.data().order}]`
+        );
+
+        if (item != null) {
+          const classList = item.classList;
+          classList.add('highlight');
+          setTimeout(() => classList.remove('highlight'), 300);
+        }
       });
     }
 
@@ -111,11 +126,11 @@ function List({ listId, editMode }: Props) {
           <div>Nothing more to pick up today.</div>
         </div>
       ) : (
-        <ul className="lists">
+        <ul className="lists" ref={listRef}>
           {docs.map(doc => {
             const item = doc.data();
             return (
-              <li key={doc.id}>
+              <li key={doc.id} data-name={item.order}>
                 <Checkbox
                   onChange={handleToggleNeeded(doc.id)}
                   checked={item.needed}
