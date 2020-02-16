@@ -6,6 +6,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import List from './List';
 import './index.css';
 import { auth } from './firebase';
+import ErrorBoundary from './ErrorBoundary';
 import 'firebase/auth';
 
 function LogoutButton() {
@@ -35,7 +36,11 @@ function Root({ listId }: { listId: string }) {
     );
   }
 
-  return <>{user ? <App listId={listId} /> : <UnauthenticatedApp />}</>;
+  return (
+    <ErrorBoundary>
+      {user ? <App listId={listId} /> : <UnauthenticatedApp />}
+    </ErrorBoundary>
+  );
 }
 
 function UnauthenticatedApp() {
