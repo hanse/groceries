@@ -36,17 +36,18 @@ function List({ listId, editMode }: Props) {
       return;
     }
 
-    const normalized = input.value.toLowerCase();
+    const name = input.value.trim();
+    const order = name.toLowerCase();
 
     const existing = await db
       .collection(`lists/${listId}/items`)
-      .where('order', '==', normalized)
+      .where('order', '==', order)
       .get();
 
     if (existing.size === 0) {
       db.collection(`lists/${listId}/items`).add({
-        name: input.value,
-        order: normalized,
+        name,
+        order,
         needed: true
       });
     } else {
@@ -95,6 +96,8 @@ function List({ listId, editMode }: Props) {
         return !!doc.data().needed;
       })
     : [];
+
+  console.log(docs.map(d => d.data()));
 
   return (
     <>
