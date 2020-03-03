@@ -23,7 +23,7 @@ function List({ listId, editMode }: Props) {
     db.collection(`lists/${listId}/items`)
       .doc(itemId)
       .update({
-        needed: e.target.checked
+        needed: !e.target.checked
       });
   };
 
@@ -47,14 +47,14 @@ function List({ listId, editMode }: Props) {
       db.collection(`lists/${listId}/items`).add({
         name: input.value,
         order: normalized,
-        needed: false
+        needed: true
       });
     } else {
       existing.forEach(doc => {
         db.collection(`lists/${listId}/items`)
           .doc(doc.id)
           .update({
-            needed: false
+            needed: true
           });
 
         if (!listRef.current) {
@@ -92,7 +92,7 @@ function List({ listId, editMode }: Props) {
           return true;
         }
 
-        return !doc.data().needed;
+        return !!doc.data().needed;
       })
     : [];
 
@@ -133,7 +133,7 @@ function List({ listId, editMode }: Props) {
               <li key={doc.id} data-name={item.order}>
                 <Checkbox
                   onChange={handleToggleNeeded(doc.id)}
-                  checked={item.needed}
+                  checked={!item.needed}
                 >
                   {item.name}
                 </Checkbox>
