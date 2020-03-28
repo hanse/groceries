@@ -1,7 +1,7 @@
 import React, { FormEvent, useRef } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from './firebase';
-import { Checkbox, Button, Input, Stack } from '@devmoods/ui';
+import { Checkbox, Button, Input } from '@devmoods/ui';
 import { ReactComponent as RemoveIcon } from './remove.svg';
 
 type Props = {
@@ -127,7 +127,20 @@ function List({ listId, editMode }: Props) {
             return (
               <li key={doc.id} data-name={item.order}>
                 <Checkbox
-                  label={item.name}
+                  label={
+                    <span
+                      style={{
+                        fontWeight: item.needed ? 600 : 400,
+                        textDecoration: item.needed ? 'none' : 'line-through'
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  }
+                  style={{
+                    ['--checkbox-color' as any]: '#eee',
+                    ['--checkbox-check-color' as any]: '#777'
+                  }}
                   onChange={handleToggleNeeded(doc.id)}
                   checked={!item.needed}
                 />

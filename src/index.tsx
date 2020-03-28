@@ -6,8 +6,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import List from './List';
 import './index.css';
 import { auth } from './firebase';
-import ErrorBoundary from './ErrorBoundary';
-import { Button, Input, Stack } from '@devmoods/ui';
+import { ErrorBoundary, Button, Input, Stack } from '@devmoods/ui';
 import 'firebase/auth';
 import '@devmoods/ui/dist/styles.css';
 
@@ -55,7 +54,7 @@ function UnauthenticatedApp() {
 
   return (
     <div className="App">
-      <header>
+      <header style={{ padding: 16 }}>
         <h1>Groceries</h1>
       </header>
 
@@ -89,7 +88,7 @@ function App({ listId }: { listId: string }) {
 
   return (
     <div className="App">
-      <header>
+      <Stack as="header" horizontal justifyContent="space-between" padding={16}>
         <h1>Groceries</h1>
         <Button
           onClick={() => setEditMode(editMode => !editMode)}
@@ -97,7 +96,7 @@ function App({ listId }: { listId: string }) {
         >
           {editMode ? 'Done' : 'View All'}
         </Button>
-      </header>
+      </Stack>
 
       <Stack as="main" padding={16} spacing={32}>
         {editMode && (

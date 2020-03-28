@@ -27,11 +27,8 @@ label {
   align-items: center;
 }
 
-header {
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+input {
+  outline: none !important;
 }
 
 ul.lists li {
