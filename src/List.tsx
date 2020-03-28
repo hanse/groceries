@@ -1,7 +1,7 @@
 import React, { FormEvent, useRef } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from './firebase';
-import Checkbox from './Checkbox';
+import { Checkbox, Button, Input, Stack } from '@devmoods/ui';
 import { ReactComponent as RemoveIcon } from './remove.svg';
 
 type Props = {
@@ -20,11 +20,9 @@ function List({ listId, editMode }: Props) {
   );
 
   const handleToggleNeeded = (itemId: string) => async (e: any) => {
-    db.collection(`lists/${listId}/items`)
-      .doc(itemId)
-      .update({
-        needed: !e.target.checked
-      });
+    db.collection(`lists/${listId}/items`).doc(itemId).update({
+      needed: !e.target.checked
+    });
   };
 
   const handleAddItem = async (e: FormEvent) => {
@@ -52,11 +50,9 @@ function List({ listId, editMode }: Props) {
       });
     } else {
       existing.forEach(doc => {
-        db.collection(`lists/${listId}/items`)
-          .doc(doc.id)
-          .update({
-            needed: true
-          });
+        db.collection(`lists/${listId}/items`).doc(doc.id).update({
+          needed: true
+        });
 
         if (!listRef.current) {
           return;
@@ -78,9 +74,7 @@ function List({ listId, editMode }: Props) {
   };
 
   const handleDeleteItem = (itemId: string) => async (e: any) => {
-    db.collection(`lists/${listId}/items`)
-      .doc(itemId)
-      .delete();
+    db.collection(`lists/${listId}/items`).doc(itemId).delete();
   };
 
   if (error) {
@@ -96,8 +90,6 @@ function List({ listId, editMode }: Props) {
         return !!doc.data().needed;
       })
     : [];
-
-  console.log(docs.map(d => d.data()));
 
   return (
     <>
@@ -135,19 +127,20 @@ function List({ listId, editMode }: Props) {
             return (
               <li key={doc.id} data-name={item.order}>
                 <Checkbox
+                  label={item.name}
                   onChange={handleToggleNeeded(doc.id)}
                   checked={!item.needed}
-                >
-                  {item.name}
-                </Checkbox>
+                />
 
                 {editMode && (
-                  <button
-                    className="Button Button--delete"
+                  <Button
+                    intent="danger"
+                    variant="text"
+                    className="Button--delete"
                     onClick={handleDeleteItem(doc.id)}
                   >
                     <RemoveIcon style={{ width: 24, height: 24 }} />
-                  </button>
+                  </Button>
                 )}
               </li>
             );
@@ -156,13 +149,17 @@ function List({ listId, editMode }: Props) {
       )}
 
       <form className="Form-addItem" onSubmit={handleAddItem} noValidate>
-        <input
+        <Input
           ref={inputRef}
           type="text"
           placeholder="Milk, cheese, apples etc."
-          style={{ marginRight: 4 }}
         />
-        <button type="submit">Add</button>
+        <Button
+          type="submit"
+          style={{ backgroundColor: '#444', marginLeft: 4 }}
+        >
+          Add
+        </Button>
       </form>
     </>
   );

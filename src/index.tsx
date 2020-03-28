@@ -7,7 +7,9 @@ import List from './List';
 import './index.css';
 import { auth } from './firebase';
 import ErrorBoundary from './ErrorBoundary';
+import { Button, Input, Stack } from '@devmoods/ui';
 import 'firebase/auth';
+import '@devmoods/ui/dist/styles.css';
 
 function LogoutButton() {
   const logout = () => {
@@ -15,9 +17,9 @@ function LogoutButton() {
   };
 
   return (
-    <button onClick={logout} style={{ backgroundColor: '#b33939' }}>
+    <Button onClick={logout} style={{ backgroundColor: '#b33939' }}>
       Logout
-    </button>
+    </Button>
   );
 }
 
@@ -57,11 +59,21 @@ function UnauthenticatedApp() {
         <h1>Groceries</h1>
       </header>
 
-      <main>
+      <Stack as="main" padding={16} spacing={32} alignItems="flex-start">
+        <img
+          src="https://raw.githubusercontent.com/hanse/groceries/master/screenshots/compact.png"
+          alt=""
+          width={150}
+          style={{ transform: 'rotate(5deg)', alignSelf: 'center' }}
+        />
         <div>
-          <button onClick={login}>Login</button>
+          <strong>
+            Real-time <em>collaborative</em> grocery lists.
+          </strong>{' '}
+          The easiest way to manage shopping with your partner.
         </div>
-      </main>
+        <Button onClick={login}>Get Started with Google</Button>
+      </Stack>
     </div>
   );
 }
@@ -79,23 +91,22 @@ function App({ listId }: { listId: string }) {
     <div className="App">
       <header>
         <h1>Groceries</h1>
-        <button
+        <Button
           onClick={() => setEditMode(editMode => !editMode)}
-          className="Button Button--text"
+          variant="text"
         >
           {editMode ? 'Done' : 'View All'}
-        </button>
+        </Button>
       </header>
 
-      <main>
+      <Stack as="main" padding={16} spacing={32}>
         {editMode && (
-          <form onSubmit={handleNavigateToList} className="Form-urlBar">
-            <label htmlFor="list-id">Use List</label>
-            <input
-              id="list-id"
+          <form onSubmit={handleNavigateToList}>
+            <Input
               ref={listIdRef}
               type="text"
               defaultValue={listId}
+              startAdornment="https://.../"
             />
           </form>
         )}
@@ -103,26 +114,14 @@ function App({ listId }: { listId: string }) {
         <List listId={listId} editMode={editMode} />
 
         {editMode && (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              flexDirection: 'column',
-              alignItems: 'center',
-              paddingTop: 32
-            }}
-          >
+          <Stack spacing={8} alignItems="center" style={{ marginTop: 32 }}>
             <LogoutButton />
-
-            <button
-              style={{ color: '#ddd', background: '#fff', marginTop: 16 }}
-              onClick={() => window.location.reload(true)}
-            >
+            <Button variant="text" onClick={() => window.location.reload(true)}>
               Reload
-            </button>
-          </div>
+            </Button>
+          </Stack>
         )}
-      </main>
+      </Stack>
     </div>
   );
 }
