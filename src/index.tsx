@@ -3,12 +3,26 @@ import { render } from 'react-dom';
 import shortid from 'shortid';
 import { createBrowserHistory, Location } from 'history';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import * as Sentry from '@sentry/browser';
 import List from './List';
 import './index.css';
 import { auth } from './firebase';
 import { ErrorBoundary, Button, Input, Stack } from '@devmoods/ui';
 import 'firebase/auth';
 import '@devmoods/ui/dist/styles.css';
+
+if (process.env.NODE_ENV === 'production') {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN
+  });
+}
+
+function onError(error: Error, errorInfo: any) {
+  Sentry.withScope(scope => {
+    scope.setExtras(errorInfo);
+    Sentry.captureException(error);
+  });
+}
 
 function LogoutButton() {
   const logout = () => {
@@ -38,7 +52,7 @@ function Root({ listId }: { listId: string }) {
   }
 
   return (
-    <ErrorBoundary>
+    <ErrorBoundary onError={onError}>
       {user ? <App listId={listId} /> : <UnauthenticatedApp />}
     </ErrorBoundary>
   );
