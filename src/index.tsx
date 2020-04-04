@@ -36,7 +36,7 @@ function LogoutButton() {
   );
 }
 
-function Root({ listId }: { listId: string }) {
+function AppLoader({ listId }: { listId: string }) {
   const [user, loading, error] = useAuthState(auth());
 
   if (loading) {
@@ -44,16 +44,20 @@ function Root({ listId }: { listId: string }) {
   }
 
   if (error) {
-    return (
-      <div>
-        <p>Error: {error}</p>
-      </div>
-    );
+    throw error;
   }
 
+  if (user) {
+    return <AuthenticatedApp listId={listId} />;
+  }
+
+  return <UnauthenticatedApp />;
+}
+
+function Root({ listId }: { listId: string }) {
   return (
     <ErrorBoundary onError={onError}>
-      {user ? <App listId={listId} /> : <UnauthenticatedApp />}
+      <AppLoader listId={listId} />
     </ErrorBoundary>
   );
 }
@@ -91,7 +95,7 @@ function UnauthenticatedApp() {
   );
 }
 
-function App({ listId }: { listId: string }) {
+function AuthenticatedApp({ listId }: { listId: string }) {
   const listIdRef = useRef<HTMLInputElement>(null);
   const [editMode, setEditMode] = useState(false);
 
