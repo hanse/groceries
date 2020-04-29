@@ -1,4 +1,4 @@
-import React, { useRef, FormEvent, useState } from 'react';
+import React, { useRef, FormEvent, useState, useEffect } from 'react';
 import { render } from 'react-dom';
 import shortid from 'shortid';
 import { createBrowserHistory, Location } from 'history';
@@ -104,17 +104,59 @@ function AuthenticatedApp({ listId }: { listId: string }) {
     history.push(`/${listIdRef.current!.value}`);
   };
 
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    const onScroll = () => {
+      if (titleRef.current) {
+        const active = (document.scrollingElement?.scrollTop || 0) > 50;
+        titleRef.current.style.opacity = active ? '1.0' : '0.0';
+      }
+    };
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
   return (
     <div className="App">
-      <Stack as="header" horizontal justifyContent="space-between" padding={16}>
-        <h1>Groceries</h1>
-        <Button
-          onClick={() => setEditMode(editMode => !editMode)}
-          variant="text"
+      <header>
+        <Stack
+          horizontal
+          justifyContent="space-between"
+          alignItems="center"
+          paddingX={16}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            maxWidth: 'var(--app-width)',
+            margin: '0 auto',
+            background: 'white',
+            paddingTop: 16,
+            zIndex: 50000
+          }}
         >
-          {editMode ? 'Done' : 'View All'}
-        </Button>
-      </Stack>
+          <h1
+            style={{ fontSize: 20, opacity: 0, transition: 'opacity 0.2s' }}
+            ref={titleRef}
+          >
+            Groceries
+          </h1>
+
+          <Button
+            onClick={() => setEditMode(editMode => !editMode)}
+            variant="text"
+          >
+            {editMode ? 'Done' : 'View All'}
+          </Button>
+        </Stack>
+
+        <Stack paddingX={16} style={{ marginTop: 60 }}>
+          <h1>Groceries</h1>
+        </Stack>
+      </header>
 
       <Stack as="main" padding={16} spacing={32}>
         {editMode && (
@@ -131,7 +173,7 @@ function AuthenticatedApp({ listId }: { listId: string }) {
         <List listId={listId} editMode={editMode} />
 
         {editMode && (
-          <Stack spacing={8} alignItems="center" style={{ marginTop: 32 }}>
+          <Stack spacing={8} alignItems="center">
             <LogoutButton />
             <Button variant="text" onClick={() => window.location.reload(true)}>
               Reload

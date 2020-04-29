@@ -109,16 +109,16 @@ function List({ listId, editMode }: Props) {
           style={{
             padding: 20,
             textAlign: 'center',
-            color: '#666'
+            color: '#333'
           }}
         >
-          <div style={{ fontSize: 24, marginBottom: 8 }}>
-            You are done{' '}
+          <div style={{ fontSize: 24, marginBottom: 8, fontWeight: 500 }}>
+            Done{' '}
             <span role="img" aria-label="clap">
               👏
             </span>
           </div>
-          <div>Nothing more to pick up today.</div>
+          <div>You have no more stuff to pick up today.</div>
         </div>
       ) : (
         <ul className="lists" ref={listRef}>
