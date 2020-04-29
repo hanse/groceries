@@ -10,6 +10,7 @@ import { auth } from './firebase';
 import { ErrorBoundary, Button, Input, Stack } from '@devmoods/ui';
 import 'firebase/auth';
 import '@devmoods/ui/dist/styles.css';
+import image from './image.png';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -71,19 +72,26 @@ function UnauthenticatedApp() {
   };
 
   return (
-    <div className="App">
-      <header style={{ padding: 16 }}>
-        <h1>Groceries</h1>
+    <div className="App" style={{ position: 'relative' }}>
+      <header style={{ padding: 16, marginTop: 100 }}>
+        <h1 style={{ fontSize: 48 }}>Groceries</h1>
       </header>
 
       <Stack as="main" padding={16} spacing={32} alignItems="flex-start">
         <img
-          src="https://raw.githubusercontent.com/hanse/groceries/master/screenshots/compact.png"
+          src={image}
           alt=""
-          width={150}
-          style={{ transform: 'rotate(5deg)', alignSelf: 'center' }}
+          height={250}
+          style={{
+            transform: 'rotate(5deg) translateY(-50%)',
+            alignSelf: 'center',
+            position: 'absolute',
+            right: 0,
+            userSelect: 'none',
+            zIndex: -1
+          }}
         />
-        <div>
+        <div style={{ paddingRight: 120 }}>
           <strong>
             Real-time <em>collaborative</em> grocery lists.
           </strong>{' '}
