@@ -1,7 +1,8 @@
-import React, { FormEvent, useRef } from 'react';
+import { Button, Checkbox, Input } from '@devmoods/ui';
+import React, { FormEvent, useRef, useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
+
 import { db } from './firebase';
-import { Checkbox, Button, Input } from '@devmoods/ui';
 import { ReactComponent as RemoveIcon } from './remove.svg';
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
 function List({ listId, editMode }: Props) {
   const listRef = useRef<HTMLUListElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [adding, setAdding] = useState(false);
   const [value, loading, error] = useCollection(
     db.collection(`lists/${listId}/items`).orderBy('order'),
     {
@@ -37,13 +39,15 @@ function List({ listId, editMode }: Props) {
     const name = input.value.trim();
     const order = name.toLowerCase();
 
+    setAdding(true);
+
     const existing = await db
       .collection(`lists/${listId}/items`)
       .where('order', '==', order)
       .get();
 
     if (existing.size === 0) {
-      db.collection(`lists/${listId}/items`).add({
+      await db.collection(`lists/${listId}/items`).add({
         name,
         order,
         needed: true
@@ -69,7 +73,7 @@ function List({ listId, editMode }: Props) {
         }
       });
     }
-
+    setAdding(false);
     input.value = '';
   };
 
@@ -169,6 +173,7 @@ function List({ listId, editMode }: Props) {
         />
         <Button
           type="submit"
+          disabled={adding}
           style={{ backgroundColor: '#444', marginLeft: 4 }}
         >
           Add
