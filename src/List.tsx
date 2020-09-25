@@ -131,23 +131,22 @@ function List({ listId, editMode }: Props) {
             return (
               <li key={doc.id} data-name={item.order}>
                 <Checkbox
-                  label={
-                    <span
-                      style={{
-                        fontWeight: item.needed ? 600 : 400,
-                        textDecoration: item.needed ? 'none' : 'line-through'
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  }
                   style={{
-                    ['--checkbox-color' as any]: '#eee',
-                    ['--checkbox-check-color' as any]: '#777'
+                    ['--Checkbox-color' as any]: '#eee',
+                    ['--Checkbox-checkColor' as any]: '#777'
                   }}
                   onChange={handleToggleNeeded(doc.id)}
                   checked={!item.needed}
-                />
+                >
+                  <span
+                    style={{
+                      fontWeight: item.needed ? 600 : 400,
+                      textDecoration: item.needed ? 'none' : 'line-through'
+                    }}
+                  >
+                    {item.name}
+                  </span>
+                </Checkbox>
 
                 {editMode && (
                   <Button

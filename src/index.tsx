@@ -1,16 +1,26 @@
-import React, { useRef, FormEvent, useState, useEffect } from 'react';
-import { render } from 'react-dom';
-import shortid from 'shortid';
-import { createBrowserHistory, Location } from 'history';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import * as Sentry from '@sentry/browser';
-import List from './List';
-import './index.css';
-import { auth } from './firebase';
-import { ErrorBoundary, Button, Input, Stack } from '@devmoods/ui';
 import 'firebase/auth';
 import '@devmoods/ui/dist/styles.css';
+import '@devmoods/ui/dist/global.css';
+
+import './index.css';
+
+import {
+  Button,
+  ErrorBoundary,
+  Input,
+  Stack,
+  ThemeProvider
+} from '@devmoods/ui';
+import * as Sentry from '@sentry/browser';
+import { Location, createBrowserHistory } from 'history';
+import React, { FormEvent, useEffect, useRef, useState } from 'react';
+import { render } from 'react-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import shortid from 'shortid';
+
+import { auth } from './firebase';
 import image from './image.png';
+import List from './List';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -58,7 +68,9 @@ function AppLoader({ listId }: { listId: string }) {
 function Root({ listId }: { listId: string }) {
   return (
     <ErrorBoundary onError={onError}>
-      <AppLoader listId={listId} />
+      <ThemeProvider>
+        <AppLoader listId={listId} />
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }
@@ -115,10 +127,12 @@ function AuthenticatedApp({ listId }: { listId: string }) {
   const titleRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     const onScroll = () => {
-      if (titleRef.current) {
-        const active = (document.scrollingElement?.scrollTop || 0) > 50;
-        titleRef.current.style.opacity = active ? '1.0' : '0.0';
-      }
+      requestAnimationFrame(() => {
+        if (titleRef.current) {
+          const active = (document.scrollingElement?.scrollTop || 0) > 50;
+          titleRef.current.style.opacity = active ? '1.0' : '0.0';
+        }
+      });
     };
     window.addEventListener('scroll', onScroll);
     return () => {
@@ -216,7 +230,7 @@ function renderApp(location: Location, el = document.getElementById('root')) {
 
 const history = createBrowserHistory();
 
-history.listen(location => {
+history.listen(({ location }) => {
   renderApp(location);
 });
 
