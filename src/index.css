@@ -64,11 +64,6 @@ form {
   flex-direction: column;
 }
 
-.Form-addItem {
-  margin: 32px 0;
-  flex-direction: row;
-}
-
 .Button--delete path {
   fill: #b33939;
 }

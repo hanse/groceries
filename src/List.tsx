@@ -1,4 +1,4 @@
-import { Button, Checkbox, Input } from '@devmoods/ui';
+import { Button, Checkbox, Input, Stack } from '@devmoods/ui';
 import React, { FormEvent, useRef, useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 
@@ -164,20 +164,23 @@ function List({ listId, editMode }: Props) {
         </ul>
       )}
 
-      <form className="Form-addItem" onSubmit={handleAddItem} noValidate>
+      <Stack
+        as="form"
+        onSubmit={handleAddItem}
+        noValidate
+        horizontal
+        alignItems="center"
+        spacing="xxs"
+      >
         <Input
           ref={inputRef}
           type="text"
           placeholder="Milk, cheese, apples etc."
         />
-        <Button
-          type="submit"
-          disabled={adding}
-          style={{ backgroundColor: '#444', marginLeft: 4 }}
-        >
+        <Button type="submit" disabled={adding}>
           Add
         </Button>
-      </form>
+      </Stack>
     </>
   );
 }

@@ -9,7 +9,8 @@ import {
   ErrorBoundary,
   Input,
   Stack,
-  ThemeProvider
+  ThemeProvider,
+  createTheme
 } from '@devmoods/ui';
 import * as Sentry from '@sentry/browser';
 import { Location, createBrowserHistory } from 'history';
@@ -65,10 +66,16 @@ function AppLoader({ listId }: { listId: string }) {
   return <UnauthenticatedApp />;
 }
 
+const theme = createTheme({
+  colors: {
+    primary: '#454545'
+  }
+});
+
 function Root({ listId }: { listId: string }) {
   return (
     <ErrorBoundary onError={onError}>
-      <ThemeProvider>
+      <ThemeProvider theme={theme}>
         <AppLoader listId={listId} />
       </ThemeProvider>
     </ErrorBoundary>
@@ -89,7 +96,7 @@ function UnauthenticatedApp() {
         <h1 style={{ fontSize: 48 }}>Groceries</h1>
       </header>
 
-      <Stack as="main" padding={16} spacing={32} alignItems="flex-start">
+      <Stack as="main" padding="m" spacing="l" alignItems="flex-start">
         <img
           src={image}
           alt=""
@@ -147,7 +154,8 @@ function AuthenticatedApp({ listId }: { listId: string }) {
           horizontal
           justifyContent="space-between"
           alignItems="center"
-          paddingX={16}
+          paddingX="m"
+          paddingTop="m"
           style={{
             position: 'fixed',
             top: 0,
@@ -156,7 +164,6 @@ function AuthenticatedApp({ listId }: { listId: string }) {
             maxWidth: 'var(--app-width)',
             margin: '0 auto',
             background: 'white',
-            paddingTop: 16,
             zIndex: 50000
           }}
         >
@@ -175,12 +182,12 @@ function AuthenticatedApp({ listId }: { listId: string }) {
           </Button>
         </Stack>
 
-        <Stack paddingX={16} style={{ marginTop: 60 }}>
+        <Stack paddingX="m" style={{ marginTop: 60 }}>
           <h1>Groceries</h1>
         </Stack>
       </header>
 
-      <Stack as="main" padding={16} spacing={32}>
+      <Stack as="main" padding="m" spacing="l">
         {editMode && (
           <form onSubmit={handleNavigateToList}>
             <Input
@@ -195,7 +202,7 @@ function AuthenticatedApp({ listId }: { listId: string }) {
         <List listId={listId} editMode={editMode} />
 
         {editMode && (
-          <Stack spacing={8} alignItems="center">
+          <Stack spacing="s" alignItems="center">
             <LogoutButton />
             <Button variant="text" onClick={() => window.location.reload(true)}>
               Reload
