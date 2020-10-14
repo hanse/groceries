@@ -1734,16 +1734,15 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
-"@devmoods/ui@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@devmoods/ui/-/ui-1.2.0.tgz#af45651e0484886b6be3d13bef9f04de6f9de784"
-  integrity sha512-DvSyGvwOze7F9Pd2CexIUwJG78GrRBX4YFOmC0AbH9tOsNcCg9NMpzZ2Z8C/yKdbmeYGt046GWiDo/B+1JSoMg==
+"@devmoods/ui@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@devmoods/ui/-/ui-1.2.1.tgz#3ea448f579e828c155611630204f6a70ae50dddf"
+  integrity sha512-vRGZwXBsBRc8bkloDmWm3c6UbCbgSia5T8gDtjywIMorPb22gvgOskaNvBL8eCZxW7ZD5PEWYy8dzIj19+rtPQ==
   dependencies:
     "@reach/dialog" "0.10.5"
     "@reach/menu-button" "0.10.5"
     classnames "2.2.6"
     date-fns "2.15.0"
-    decamelize "4.0.0"
     prop-types "^15.6"
     react-icons "3.11.0"
 
@@ -4802,11 +4801,6 @@ debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
   integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
   dependencies:
     ms "^2.1.1"
-
-decamelize@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-4.0.0.tgz#aa472d7bf660eb15f3494efd531cab7f2a709837"
-  integrity sha512-9iE1PgSik9HeIIw2JO94IidnE3eBoQrFJ3w7sFuzSX4DpmZ3v5sZpUiV5Swcf6mQEF+Y0ru8Neo+p+nyh2J+hQ==
 
 decamelize@^1.2.0:
   version "1.2.0"
