@@ -86,7 +86,7 @@ function List({ listId, editMode }: Props) {
   }
 
   const docs = value
-    ? value.docs.filter(doc => {
+    ? value.docs.filter((doc: any) => {
         if (editMode) {
           return true;
         }
@@ -126,7 +126,7 @@ function List({ listId, editMode }: Props) {
         </div>
       ) : (
         <ul className="lists" ref={listRef}>
-          {docs.map(doc => {
+          {docs.map((doc: any) => {
             const item = doc.data();
             return (
               <li key={doc.id} data-name={item.order}>
