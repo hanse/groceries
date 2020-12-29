@@ -141,7 +141,9 @@ function List({ listId, editMode }: Props) {
                   <span
                     style={{
                       fontWeight: item.needed ? 600 : 400,
-                      textDecoration: item.needed ? 'none' : 'line-through'
+                      textDecoration: item.needed ? 'none' : 'line-through',
+                      marginTop: -2,
+                      display: 'block'
                     }}
                   >
                     {item.name}
