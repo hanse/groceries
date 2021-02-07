@@ -203,25 +203,27 @@ const ListItem = React.memo(function ListItem({
 }: ListItemProps) {
   return (
     <li data-name={order}>
-      <Checkbox
-        style={{
-          ['--Checkbox-color' as any]: '#eee',
-          ['--Checkbox-checkColor' as any]: '#777'
-        }}
-        onChange={e => onToggleChecked(id, !e.currentTarget.checked)}
-        checked={!needed}
-      >
-        <span
+      <div className="item-name">
+        <Checkbox
           style={{
-            fontWeight: needed ? 600 : 400,
-            textDecoration: needed ? 'none' : 'line-through',
-            marginTop: -2,
-            display: 'block'
+            ['--Checkbox-color' as any]: '#eee',
+            ['--Checkbox-checkColor' as any]: '#777'
           }}
+          onChange={e => onToggleChecked(id, !e.currentTarget.checked)}
+          checked={!needed}
         >
-          {name}
-        </span>
-      </Checkbox>
+          <span
+            style={{
+              fontWeight: needed ? 600 : 400,
+              textDecoration: needed ? 'none' : 'line-through',
+              marginTop: -2,
+              display: 'block'
+            }}
+          >
+            {name}
+          </span>
+        </Checkbox>
+      </div>
 
       {isEditing && (
         <Button

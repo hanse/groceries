@@ -23,6 +23,15 @@ body {
   margin: 0 auto;
 }
 
+.big-heading {
+  height: 40px;
+  font-size: 40px;
+  margin-top: 84px;
+  margin-bottom: 32px;
+  line-height: 1.25;
+  padding: 0 20px;
+}
+
 label {
   cursor: pointer;
   display: flex;
@@ -135,4 +144,26 @@ img {
     transform: scale(1);
     -webkit-transform: scale(1);
   }
+}
+
+.item-name {
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.item-name::after {
+  content: '';
+  text-align: right;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 10%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 1) 50%
+  );
 }

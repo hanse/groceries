@@ -136,7 +136,7 @@ function AuthenticatedApp({ listId }: { listId: string }) {
     const onScroll = () => {
       requestAnimationFrame(() => {
         if (titleRef.current) {
-          const active = (document.scrollingElement?.scrollTop || 0) > 50;
+          const active = (document.scrollingElement?.scrollTop || 0) >= 40;
           titleRef.current.style.opacity = active ? '1.0' : '0.0';
         }
       });
@@ -155,7 +155,6 @@ function AuthenticatedApp({ listId }: { listId: string }) {
           justifyContent="space-between"
           alignItems="center"
           paddingX="m"
-          paddingTop="m"
           style={{
             position: 'fixed',
             top: 0,
@@ -164,6 +163,7 @@ function AuthenticatedApp({ listId }: { listId: string }) {
             maxWidth: 'var(--app-width)',
             margin: '0 auto',
             background: 'white',
+            height: 84,
             zIndex: 50000
           }}
         >
@@ -182,12 +182,10 @@ function AuthenticatedApp({ listId }: { listId: string }) {
           </Button>
         </Stack>
 
-        <Stack paddingX="m" style={{ marginTop: 60 }}>
-          <h1>Groceries</h1>
-        </Stack>
+        <h1 className="big-heading">Groceries</h1>
       </header>
 
-      <Stack as="main" padding="m" spacing="l">
+      <Stack as="main" paddingX="m" spacing="l" style={{ paddingBottom: 64 }}>
         {editMode && (
           <form onSubmit={handleNavigateToList}>
             <Input
