@@ -1,97 +1,115 @@
 import { Button, Checkbox, Input, Stack } from '@devmoods/ui';
-import React, { FormEvent, useRef, useState } from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import * as React from 'react';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 import { db } from './firebase';
 import { ReactComponent as RemoveIcon } from './remove.svg';
 
-type Props = {
+interface Item {
+  id: string;
+  name: string;
+  needed: boolean;
+  order: string;
+}
+
+interface ListProps {
   listId: string;
   editMode: boolean;
-};
+}
 
-function List({ listId, editMode }: Props) {
-  const listRef = useRef<HTMLUListElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [adding, setAdding] = useState(false);
-  const [value, loading, error] = useCollection(
+function List({ listId, editMode }: ListProps) {
+  const listRef = React.useRef<HTMLUListElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [adding, setAdding] = React.useState(false);
+
+  const [value, loading, error] = useCollectionData<Item>(
     db.collection(`lists/${listId}/items`).orderBy('order'),
     {
-      snapshotListenOptions: { includeMetadataChanges: true }
+      snapshotListenOptions: { includeMetadataChanges: true },
+      idField: 'id'
     }
   );
 
-  const handleToggleNeeded = (itemId: string) => async (e: any) => {
-    db.collection(`lists/${listId}/items`).doc(itemId).update({
-      needed: !e.target.checked
-    });
-  };
-
-  const handleAddItem = async (e: FormEvent) => {
-    e.preventDefault();
-
-    const input = inputRef.current!;
-
-    if (input.value.trim().length === 0) {
-      return;
-    }
-
-    const name = input.value.trim();
-    const order = name.toLowerCase();
-
-    setAdding(true);
-
-    const existing = await db
-      .collection(`lists/${listId}/items`)
-      .where('order', '==', order)
-      .get();
-
-    if (existing.size === 0) {
-      await db.collection(`lists/${listId}/items`).add({
-        name,
-        order,
-        needed: true
+  const handleToggleNeeded = React.useCallback(
+    (itemId: string, needed: boolean) => {
+      db.collection(`lists/${listId}/items`).doc(itemId).update({
+        needed
       });
-    } else {
-      existing.forEach(doc => {
-        db.collection(`lists/${listId}/items`).doc(doc.id).update({
+    },
+    [listId]
+  );
+
+  const handleAddItem: React.FormEventHandler<HTMLFormElement> = React.useCallback(
+    async e => {
+      e.preventDefault();
+
+      const input = inputRef.current!;
+
+      if (input.value.trim().length === 0) {
+        return;
+      }
+
+      const name = input.value.trim();
+      const order = name.toLowerCase();
+
+      setAdding(true);
+
+      const existing = await db
+        .collection(`lists/${listId}/items`)
+        .where('order', '==', order)
+        .get();
+
+      if (existing.size === 0) {
+        await db.collection(`lists/${listId}/items`).add({
+          name,
+          order,
           needed: true
         });
+      } else {
+        existing.forEach(doc => {
+          db.collection(`lists/${listId}/items`).doc(doc.id).update({
+            needed: true
+          });
 
-        if (!listRef.current) {
-          return;
-        }
+          if (!listRef.current) {
+            return;
+          }
 
-        const item = listRef.current!.querySelector(
-          `[data-name=${doc.data().order}]`
-        );
+          const item = listRef.current?.querySelector(
+            `[data-name=${doc.data().order}]`
+          );
 
-        if (item != null) {
-          const classList = item.classList;
-          classList.add('highlight');
-          setTimeout(() => classList.remove('highlight'), 300);
-        }
-      });
-    }
-    setAdding(false);
-    input.value = '';
-  };
+          if (item != null) {
+            const classList = item.classList;
+            classList.add('highlight');
+            setTimeout(() => classList.remove('highlight'), 300);
+          }
+        });
+      }
+      setAdding(false);
+      input.value = '';
+    },
+    [listId]
+  );
 
-  const handleDeleteItem = (itemId: string) => async (e: any) => {
-    db.collection(`lists/${listId}/items`).doc(itemId).delete();
-  };
+  const handleDeleteItem = React.useCallback(
+    async (itemId: string) => {
+      db.collection(`lists/${listId}/items`).doc(itemId).delete();
+    },
+    [listId]
+  );
 
   if (error) {
     throw error;
   }
 
   const docs = value
-    ? value.docs.filter((doc: any) => {
+    ? value.filter(item => {
         if (editMode) {
           return true;
         }
 
-        return !!doc.data().needed;
+        return !!item.needed;
       })
     : [];
 
@@ -126,41 +144,18 @@ function List({ listId, editMode }: Props) {
         </div>
       ) : (
         <ul className="lists" ref={listRef}>
-          {docs.map((doc: any) => {
-            const item = doc.data();
+          {docs.map(item => {
             return (
-              <li key={doc.id} data-name={item.order}>
-                <Checkbox
-                  style={{
-                    ['--Checkbox-color' as any]: '#eee',
-                    ['--Checkbox-checkColor' as any]: '#777'
-                  }}
-                  onChange={handleToggleNeeded(doc.id)}
-                  checked={!item.needed}
-                >
-                  <span
-                    style={{
-                      fontWeight: item.needed ? 600 : 400,
-                      textDecoration: item.needed ? 'none' : 'line-through',
-                      marginTop: -2,
-                      display: 'block'
-                    }}
-                  >
-                    {item.name}
-                  </span>
-                </Checkbox>
-
-                {editMode && (
-                  <Button
-                    intent="danger"
-                    variant="text"
-                    className="Button--delete"
-                    onClick={handleDeleteItem(doc.id)}
-                  >
-                    <RemoveIcon style={{ width: 24, height: 24 }} />
-                  </Button>
-                )}
-              </li>
+              <ListItem
+                key={item.id}
+                id={item.id}
+                name={item.name}
+                order={item.order}
+                needed={item.needed}
+                isEditing={editMode}
+                onToggleChecked={handleToggleNeeded}
+                onDelete={handleDeleteItem}
+              />
             );
           })}
         </ul>
@@ -186,5 +181,60 @@ function List({ listId, editMode }: Props) {
     </>
   );
 }
+
+interface ListItemProps {
+  id: string;
+  name: string;
+  order: string;
+  isEditing: boolean;
+  needed: boolean;
+  onToggleChecked: (itemId: string, checked: boolean) => void;
+  onDelete: (itemId: string) => void;
+}
+
+const ListItem = React.memo(function ListItem({
+  id,
+  name,
+  isEditing,
+  order,
+  needed,
+  onToggleChecked,
+  onDelete
+}: ListItemProps) {
+  return (
+    <li data-name={order}>
+      <Checkbox
+        style={{
+          ['--Checkbox-color' as any]: '#eee',
+          ['--Checkbox-checkColor' as any]: '#777'
+        }}
+        onChange={e => onToggleChecked(id, !e.currentTarget.checked)}
+        checked={!needed}
+      >
+        <span
+          style={{
+            fontWeight: needed ? 600 : 400,
+            textDecoration: needed ? 'none' : 'line-through',
+            marginTop: -2,
+            display: 'block'
+          }}
+        >
+          {name}
+        </span>
+      </Checkbox>
+
+      {isEditing && (
+        <Button
+          intent="danger"
+          variant="text"
+          className="Button--delete"
+          onClick={() => onDelete(id)}
+        >
+          <RemoveIcon style={{ width: 24, height: 24 }} />
+        </Button>
+      )}
+    </li>
+  );
+});
 
 export default List;
