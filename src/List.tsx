@@ -161,26 +161,48 @@ function List({ listId, editMode }: ListProps) {
         </ul>
       )}
 
+      <AddNewItemForm
+        ref={inputRef}
+        onSubmit={handleAddItem}
+        disabled={adding}
+      />
+    </>
+  );
+}
+
+interface AddNewItemFormProps {
+  onSubmit: React.FormEventHandler<HTMLFormElement>;
+  disabled?: boolean;
+}
+
+const AddNewItemForm = React.forwardRef<HTMLInputElement, AddNewItemFormProps>(
+  function AddNewItemForm({ onSubmit, disabled }, ref) {
+    const [hasFocus, setFocus] = React.useState(false);
+    return (
       <Stack
         as="form"
-        onSubmit={handleAddItem}
+        onSubmit={onSubmit}
         noValidate
         horizontal
         alignItems="center"
         spacing="xxs"
+        className="add-new-item-form"
+        data-focused={hasFocus}
       >
         <Input
-          ref={inputRef}
+          ref={ref}
           type="text"
-          placeholder="Milk, cheese, apples etc."
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+          placeholder="We need..."
         />
-        <Button type="submit" disabled={adding}>
+        <Button type="submit" disabled={disabled}>
           Add
         </Button>
       </Stack>
-    </>
-  );
-}
+    );
+  }
+);
 
 interface ListItemProps {
   id: string;

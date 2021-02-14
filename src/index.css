@@ -167,3 +167,22 @@ img {
     rgba(255, 255, 255, 1) 50%
   );
 }
+
+.add-new-item-form {
+  position: relative;
+}
+
+.add-new-item-form button {
+  width: 100px;
+  position: absolute;
+  right: 0;
+}
+
+.add-new-item-form[data-focused='false'] button {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.add-new-item-form[data-focused='true'] button {
+  opacity: 1;
+}
