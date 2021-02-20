@@ -22,6 +22,7 @@ import shortid from 'shortid';
 import { auth } from './firebase';
 import image from './image.png';
 import List from './List';
+import { ReactComponent as RefreshIcon } from './refresh.svg';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -186,7 +187,14 @@ function AuthenticatedApp({ listId }: { listId: string }) {
           </Button>
         </Stack>
 
-        <h1 className="big-heading">Groceries</h1>
+        <h1 className="big-heading">
+          <span>Groceries</span>
+          {editMode && (
+            <Button variant="text" onClick={() => window.location.reload(true)}>
+              <RefreshIcon style={{ width: 24, height: 24 }} />
+            </Button>
+          )}
+        </h1>
       </header>
 
       <Stack as="main" paddingX="m" spacing="l" style={{ paddingBottom: 64 }}>
@@ -206,9 +214,6 @@ function AuthenticatedApp({ listId }: { listId: string }) {
         {editMode && (
           <Stack spacing="s" alignItems="center">
             <LogoutButton />
-            <Button variant="text" onClick={() => window.location.reload(true)}>
-              Reload
-            </Button>
           </Stack>
         )}
       </Stack>

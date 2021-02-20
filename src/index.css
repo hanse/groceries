@@ -30,6 +30,9 @@ body {
   margin-bottom: 32px;
   line-height: 1.25;
   padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 label {
