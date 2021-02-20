@@ -42,7 +42,7 @@ function LogoutButton() {
   };
 
   return (
-    <Button onClick={logout} style={{ backgroundColor: '#b33939' }}>
+    <Button onClick={logout} color="#b33939">
       Logout
     </Button>
   );
@@ -70,7 +70,6 @@ const theme = createTheme({
   colors: {
     primary: '#454545',
     formsBorderRadius: '6px',
-    formsBorder: '0px', // TODO: Remove
     formsBorderWidth: '0px',
     formsBackground: '#f2f2f2',
     formsBackgroundHover: '#f0f0f0'

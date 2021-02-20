@@ -180,7 +180,6 @@ img {
 
 .add-new-item-form[data-focused='false'] button {
   opacity: 0;
-  pointer-events: none;
 }
 
 .add-new-item-form[data-focused='true'] button {
