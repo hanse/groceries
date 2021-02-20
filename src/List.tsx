@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 import { db } from './firebase';
-import { ReactComponent as RemoveIcon } from './remove.svg';
+import RemoveIcon from './remove.svg';
 
 interface Item {
   id: string;
@@ -254,6 +254,7 @@ const ListItem = React.memo(function ListItem({
           className="Button--delete"
           onClick={() => onDelete(id)}
         >
+          {/* @ts-ignore */}
           <RemoveIcon style={{ width: 24, height: 24 }} />
         </Button>
       )}

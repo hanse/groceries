@@ -22,11 +22,11 @@ import shortid from 'shortid';
 import { auth } from './firebase';
 import image from './image.png';
 import List from './List';
-import { ReactComponent as RefreshIcon } from './refresh.svg';
+import RefreshIcon from './refresh.svg';
 
-if (process.env.NODE_ENV === 'production') {
+if (import.meta.env.NODE_ENV === 'production') {
   Sentry.init({
-    dsn: process.env.SENTRY_DSN
+    dsn: import.meta.env.SENTRY_DSN as string
   });
 }
 
@@ -191,6 +191,7 @@ function AuthenticatedApp({ listId }: { listId: string }) {
           <span>Groceries</span>
           {editMode && (
             <Button variant="text" onClick={() => window.location.reload(true)}>
+              {/* @ts-ignore */}
               <RefreshIcon style={{ width: 24, height: 24 }} />
             </Button>
           )}
